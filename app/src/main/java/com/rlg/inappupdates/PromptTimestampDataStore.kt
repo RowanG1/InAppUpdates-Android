@@ -1,24 +1,31 @@
 package com.rlg.inappupdates
 
 import android.content.Context
-import androidx.datastore.core.Serializer
-import androidx.datastore.dataStore
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flow
 
-class PromptTimestampDataStore(private val context: Context, serializer: Serializer<String>) {
-    private val Context.lastFlexiblePromptShown by
-        dataStore(fileName = "last_flexible_prompt_shown.json", serializer = serializer)
+class PromptTimestampDataStore(private val context: Context) {
 
-    fun getLastPromptTimestamp(): Flow<Long?> {
-        return context.lastFlexiblePromptShown.data.map { it.toLongOrNull() }
+    companion object {
+        private const val PREF_NAME = "prompt_timestamp_prefs"
+        private const val LAST_FLEXIBLE_PROMPT_KEY = "last_flexible_prompt_shown"
     }
 
-    suspend fun setLastPromptTimestamp(timestamp: Long) {
-        context.lastFlexiblePromptShown.updateData { timestamp.toString() }
+    private val sharedPreferences by lazy {
+        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     }
 
-    suspend fun clearLastPromptTimestamp() {
-        context.lastFlexiblePromptShown.updateData { "" }
+    fun getLastPromptTimestamp(): Flow<Long?> = flow {
+        val timestamp = sharedPreferences.getString(LAST_FLEXIBLE_PROMPT_KEY, null)?.toLongOrNull()
+        emit(timestamp)
+    }
+
+    fun setLastPromptTimestamp(timestamp: Long) {
+        sharedPreferences.edit().putString(LAST_FLEXIBLE_PROMPT_KEY, timestamp.toString()).apply()
+    }
+
+    fun clearLastPromptTimestamp() {
+        sharedPreferences.edit().remove(LAST_FLEXIBLE_PROMPT_KEY).apply()
     }
 }
+

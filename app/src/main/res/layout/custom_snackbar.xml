@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_background"
+    android:padding="16dp"
+    android:orientation="vertical"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/snackbar_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorOnSurface"
+        android:textSize="16sp"
+        android:text="Default Message"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:maxLines="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/snackbar_button_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download"
+            android:textColor="@color/colorPrimary"
+            android:backgroundTint="@color/transparent" />
+
+        <Button
+            android:id="@+id/snackbar_button_dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:textColor="@color/colorOnSurface"
+            android:backgroundTint="@color/transparent"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+</LinearLayout>
