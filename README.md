@@ -4,7 +4,7 @@ This repository provides a robust, modular, and production-ready implementation 
 using Google's Play Core Library. It demonstrates how to manage updates seamlessly, ensuring user
 satisfaction with the latest features and fixes while maintaining security.
 
-Features
+## Features:  
 ✅ Seamless Update Handling
 Supports flexible and immediate updates using Play Core API.  
 ✅ Robust State Management
