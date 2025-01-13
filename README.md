@@ -6,8 +6,8 @@ satisfaction with the latest features and fixes while maintaining security.
 
 Features
 ✅ Seamless Update Handling
-Supports flexible and immediate updates using Play Core API.
+Supports flexible and immediate updates using Play Core API.  
 ✅ Robust State Management
-Tracks the update process, including timeouts, failures.
+Tracks the update process, including timeouts, failures.  
 Leverages StateFlow for reactive UI updates and StateEvent for one-off triggers.
-✅ Unit tests with lifecycle simulations
+✅ Unit tests with lifecycle simulations.  
