@@ -156,11 +156,6 @@ class InAppUpdateViewModel(
         _uiState.value = _uiState.value.copy(showInstallPrompt = consumed)
     }
 
-    fun unregisterListeners() {
-        Timber.tag(LOG_TAG).d("Unregistering update listeners")
-        inAppUpdateRepo.unregisterUpdateListener()
-    }
-
     // Observers
     private fun observeInstallStatus() {
         viewModelScope.launch(defaultDispatcher) {

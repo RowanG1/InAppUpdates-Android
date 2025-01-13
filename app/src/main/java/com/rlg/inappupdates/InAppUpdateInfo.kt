@@ -10,9 +10,3 @@ data class InAppUpdateInfo(
     val isActivelyDownloading: Boolean,
     val downloadTriggeredIncomplete: Boolean,
 )
-
-enum class InAppInstallState {
-    UNKNOWN,
-    DOWNLOADED,
-    FAILED,
-}

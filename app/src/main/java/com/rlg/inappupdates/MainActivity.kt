@@ -24,7 +24,7 @@ import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
     // In-App Update dependencies
-    private val clockUtil = ClockUtilImpl() // Clock utility for timing (e.g., throttling updates)
+    private val clockUtil = ClockUtilImpl() // Clock utility for timing (e.g., throttling update prompts)
     private lateinit var inAppUpdateViewModel: InAppUpdateViewModel // ViewModel to manage update logic
     private lateinit var updateLauncher: ActivityResultLauncher<IntentSenderRequest> // Launcher for update flows
 
