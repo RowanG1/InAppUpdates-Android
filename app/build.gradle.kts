@@ -69,7 +69,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // Added libs to standard template Android project
+    // Added libs on top of standard template Android project
     implementation("com.github.leonard-palm:compose-state-events:2.2.0")
     implementation("com.google.android.play:app-update-ktx:2.1.0")
     implementation("com.jakewharton.timber:timber:5.0.1")
