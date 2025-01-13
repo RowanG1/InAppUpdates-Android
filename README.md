@@ -11,3 +11,5 @@ Supports flexible and immediate updates using Play Core API.
 Tracks the update process, including timeouts, failures.  
 Leverages StateFlow for reactive UI updates and StateEvent for one-off triggers.
 ✅ Unit tests with lifecycle simulations.  
+
+[Mastering In-App Updates in Android: A Practical Guide](https://medium.com/@rgontier/mastering-in-app-updates-in-android-a-practical-guide-a062f02eabf3)
