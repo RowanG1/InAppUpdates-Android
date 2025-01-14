@@ -7,13 +7,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
-import kotlin.test.assertEquals
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -22,6 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import kotlin.test.assertEquals
 
 @RunWith(RobolectricTestRunner::class)
 @Config(application = Application::class, qualifiers = "en", sdk = [Build.VERSION_CODES.P])
@@ -32,18 +33,21 @@ class InAppUpdateRepoImplTest {
     private lateinit var repository: InAppUpdateRepoImpl
     private lateinit var mockPromptTimestampDataStore: PromptTimestampDataStore
     private lateinit var testDispatcher: CoroutineDispatcher
+    private lateinit var clockUtil: ClockUtil
 
     @Before
     fun setUp() {
         context = mockk(relaxed = true)
         fakeAppUpdateManager = FakeAppUpdateManager(context)
         mockPromptTimestampDataStore = mockk()
+        clockUtil = mockk { every { getCurrentTimeMillis() } returns System.currentTimeMillis() }
         testDispatcher = StandardTestDispatcher()
         repository =
             InAppUpdateRepoImpl(
                 appUpdateManager = fakeAppUpdateManager,
                 promptDataStore = mockPromptTimestampDataStore,
                 testDispatcher,
+                clockUtil,
             )
     }
 
@@ -54,7 +58,7 @@ class InAppUpdateRepoImplTest {
             val expiredTimestamp =
                 System.currentTimeMillis() - (2 * 24 * 60 * 60 * 1000) // 2 days ago
             coEvery { mockPromptTimestampDataStore.getLastPromptTimestamp() } returns
-                flowOf(expiredTimestamp)
+                    flowOf(expiredTimestamp)
 
             // Act
             val isExpired = repository.isFlexibleUpdatePromptCooldownExpired()
@@ -69,7 +73,7 @@ class InAppUpdateRepoImplTest {
             // Arrange
             val recentTimestamp = System.currentTimeMillis() - (12 * 60 * 60 * 1000) // 12 hours ago
             coEvery { mockPromptTimestampDataStore.getLastPromptTimestamp() } returns
-                flowOf(recentTimestamp)
+                    flowOf(recentTimestamp)
 
             // Act
             val isExpired = repository.isFlexibleUpdatePromptCooldownExpired()
@@ -92,7 +96,7 @@ class InAppUpdateRepoImplTest {
         fakeAppUpdateManager.downloadCompletes()
 
         // Allow state propagation
-        delay(1000)
+        advanceUntilIdle()
 
         // Assert
         assertEquals(InAppInstallState.DOWNLOADED, repository.installStateFlow.value)

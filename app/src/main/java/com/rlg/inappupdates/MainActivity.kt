@@ -37,7 +37,8 @@ class MainActivity : ComponentActivity() {
             inAppUpdateRepo = InAppUpdateRepoImpl(
                 appUpdateManager = AppUpdateManagerFactory.create(this), // AppUpdateManager for managing update flows
                 ioDispatcher = Dispatchers.IO,
-                promptDataStore = PromptTimestampDataStore(this)
+                promptDataStore = PromptTimestampDataStore(this),
+                clockUtil = clockUtil
             ),
             clockUtil = clockUtil,
             defaultDispatcher = Dispatchers.IO

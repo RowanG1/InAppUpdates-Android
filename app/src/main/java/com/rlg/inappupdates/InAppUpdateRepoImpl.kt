@@ -18,10 +18,12 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class InAppUpdateRepoImpl(
+class InAppUpdateRepoImpl
+    (
     private val appUpdateManager: AppUpdateManager,
     private val promptDataStore: PromptTimestampDataStore,
     private val ioDispatcher: CoroutineDispatcher,
+    private val clockUtil: ClockUtil,
 ) : InAppUpdateRepository {
 
     companion object {
@@ -50,14 +52,14 @@ class InAppUpdateRepoImpl(
 
                 InAppUpdateInfo(
                     updateAvailable =
-                        info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE,
+                    info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE,
                     immediateAllowed = info.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE),
                     flexibleAllowed = info.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE),
                     priority = info.updatePriority(),
                     stalenessDays = info.clientVersionStalenessDays() ?: 0,
                     isDownloaded = info.installStatus() == InstallStatus.DOWNLOADED,
                     downloadTriggeredIncomplete =
-                        info.updateAvailability() ==
+                    info.updateAvailability() ==
                             UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS,
                     isActivelyDownloading = info.installStatus() == InstallStatus.DOWNLOADING,
                 )
@@ -70,7 +72,7 @@ class InAppUpdateRepoImpl(
     override suspend fun isFlexibleUpdatePromptCooldownExpired(): Boolean {
         return try {
             val lastPromptTimestamp = getFlexibleUpdateTimestamp().take(1).lastOrNull() ?: 0L
-            val currentTimestamp = System.currentTimeMillis()
+            val currentTimestamp = clockUtil.getCurrentTimeMillis()
             currentTimestamp - lastPromptTimestamp > ONE_DAY_IN_MILLIS
         } catch (e: Exception) {
             Timber.tag(LOG_TAG).e(e, "Failed to determine if flexible update cooldown expired")
@@ -80,8 +82,8 @@ class InAppUpdateRepoImpl(
 
     override fun shouldTriggerImmediateUpdate(updateInfo: InAppUpdateInfo): Boolean {
         return updateInfo.immediateAllowed &&
-            (updateInfo.priority >= PRIORITY_THRESHOLD ||
-                updateInfo.stalenessDays > STALENESS_THRESHOLD_DAYS)
+                (updateInfo.priority >= PRIORITY_THRESHOLD ||
+                        updateInfo.stalenessDays > STALENESS_THRESHOLD_DAYS)
     }
 
     override suspend fun triggerImmediateUpdate(
@@ -120,7 +122,7 @@ class InAppUpdateRepoImpl(
 
     override suspend fun setLastFlexiblePromptShownTimestamp() {
         try {
-            val currentTimeMillis = System.currentTimeMillis()
+            val currentTimeMillis = clockUtil.getCurrentTimeMillis()
             promptDataStore.setLastPromptTimestamp(currentTimeMillis)
         } catch (e: Exception) {
             Timber.tag(LOG_TAG).e(e, "Failed to set last flexible prompt timestamp")

@@ -53,7 +53,7 @@ class InAppUpdateViewModelTest {
         testScope = TestScope(testDispatcher)
 
         val inAppUpdateRepo =
-            InAppUpdateRepoImpl(fakeAppUpdateManager, promptTimestampDataStore, testDispatcher)
+            InAppUpdateRepoImpl(fakeAppUpdateManager, promptTimestampDataStore, testDispatcher, clockUtil)
         viewModel = InAppUpdateViewModel(inAppUpdateRepo, clockUtil, testDispatcher)
     }
 
